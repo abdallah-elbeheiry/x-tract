@@ -1,0 +1,34 @@
+﻿# Flutter
+ui/.dart_tool/
+ui/.flutter-plugins
+ui/.flutter-plugins-dependencies
+ui/.packages
+ui/build/
+ui/.idea/
+ui/.vscode/
+
+# Android / iOS / Web builds
+ui/android/.gradle/
+ui/android/app/build/
+ui/ios/Pods/
+ui/ios/.symlinks/
+ui/web/build/
+
+# Go
+server/bin/
+server/*.exe
+server/*.out
+server/vendor/
+
+# Go modules cache (optional local noise)
+*.test
+*.exe
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs
+s*.log
