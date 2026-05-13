@@ -1,4 +1,5 @@
-﻿-- Base User Table
+-- +goose Up
+-- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS users (
                                      id UUID PRIMARY KEY,
                                      name TEXT NOT NULL,
@@ -37,3 +38,14 @@ CREATE TABLE IF NOT EXISTS operations (
                                           weight NUMERIC,
                                           occurred_at TIMESTAMP WITH TIME ZONE
 );
+-- +goose StatementEnd
+
+-- +goose Down
+-- +goose StatementBegin
+DROP TABLE IF EXISTS operations;
+DROP TABLE IF EXISTS guest_employee;
+DROP TABLE IF EXISTS groups;
+DROP TABLE IF EXISTS salesman;
+DROP TABLE IF EXISTS customer;
+DROP TABLE IF EXISTS users;
+-- +goose StatementEnd
