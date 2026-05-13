@@ -1,21 +1,24 @@
 package models
 
+import "github.com/google/uuid"
+
 type Role string
 
 const (
-	Admin         Role = "ADMIN"
-	Customer      Role = "CUSTOMER"
-	SalesMan      Role = "SALES_MAN"
-	GuestEmployee Role = "GUEST_EMPLOYEE"
+	Role_Admin         Role = "ADMIN"
+	Role_Customer      Role = "CUSTOMER"
+	Role_SalesMan      Role = "SALES_MAN"
+	Role_GuestEmployee Role = "GUEST_EMPLOYEE"
 )
 
 type User struct {
-	ID       int    `json:"id"`
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Role     Role   `json:"role"`
-	Hash     []byte `json:"hash"`
-	Salt     []byte `json:"salt"`
+	ID       uuid.UUID `json:"id"`
+	Username string    `json:"username"`
+	Email    string    `json:"email"`
+	Number   *string   `json:"number,omitempty"` // optional field
+	Role     Role      `json:"role"`
+	Hash     []byte    `json:"-"`
+	Salt     []byte    `json:"-"`
 }
 
 func (u *User) Is(r Role) bool {
@@ -40,7 +43,7 @@ func (u *User) HasRole(roles ...Role) bool {
 	return false
 }
 
-func NewUser(id int, username, email string, role Role) *User {
+func NewUser(id uuid.UUID, username, email string, role Role) *User {
 	return &User{
 		ID:       id,
 		Username: username,
@@ -48,3 +51,5 @@ func NewUser(id int, username, email string, role Role) *User {
 		Role:     role,
 	}
 }
+
+//logic added later
