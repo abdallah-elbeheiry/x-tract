@@ -3,6 +3,7 @@ package data
 import (
 	"database/sql"
 	"embed"
+	"errors"
 	"fmt"
 	"time"
 
@@ -18,6 +19,10 @@ type PostgresConfig struct {
 
 // NewPostgres creates a tuned connection pool
 func NewPostgres(cfg PostgresConfig) (*Database, error) {
+	if cfg.URL == "" {
+		return nil, errors.New("database url is required")
+	}
+
 	db, err := sql.Open("pgx", cfg.URL)
 	if err != nil {
 		return nil, fmt.Errorf("error opening db: %w", err)
@@ -38,6 +43,7 @@ func NewPostgres(cfg PostgresConfig) (*Database, error) {
 //go:embed migrations/*.sql
 var embedMigrations embed.FS
 
+// RunMigrations applies embedded SQL migrations to the configured database.
 func RunMigrations(db *Database) error {
 	goose.SetBaseFS(embedMigrations)
 
