@@ -22,6 +22,7 @@ func main() {
 	}()
 
 	router := gin.Default()
+	router.Use(ginCORS())
 	jwtManager := newJWTManager()
 
 	endpoints.Register(router, endpoints.Handlers{
@@ -77,4 +78,20 @@ func newJWTManager() *auth.Manager {
 		TTL:        24 * time.Hour,
 		IssuerName: "x-tract",
 	})
+}
+
+// In your main.go or where you setup routes
+func ginCORS() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, PATCH")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
 }
