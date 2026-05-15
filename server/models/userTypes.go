@@ -1,7 +1,5 @@
 package models
 
-import "github.com/google/uuid"
-
 // Admin represents an admin user.
 type Admin struct {
 	User *User `json:"user" binding:"required"`
@@ -21,6 +19,6 @@ type Salesman struct {
 
 // GuestEmployee links a user record to guest employee fields.
 type GuestEmployee struct {
-	User    *User      `json:"user" binding:"required"`
-	GroupID *uuid.UUID `json:"group_id,omitempty"`
+	User  *User  `json:"user" binding:"required"`
+	Group *Group `json:"group,omitempty"`
 }

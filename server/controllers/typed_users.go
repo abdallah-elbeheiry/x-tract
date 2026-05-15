@@ -7,6 +7,8 @@ type (
 	AdminController = CRUDController[models.Admin, models.NewAdmin, models.UpdateAdmin]
 	// CustomerController handles customer CRUD endpoints.
 	CustomerController = CRUDController[models.Customer, models.NewCustomer, models.UpdateCustomer]
+	// GroupController handles group CRUD endpoints.
+	GroupController = CRUDController[models.Group, models.NewGroup, models.UpdateGroup]
 	// SalesmanController handles salesman CRUD endpoints.
 	SalesmanController = CRUDController[models.Salesman, models.NewSalesman, models.UpdateSalesman]
 	// GuestEmployeeController handles guest employee CRUD endpoints.
@@ -19,6 +21,10 @@ func NewAdminController(store CRUDStore[models.Admin, models.NewAdmin, models.Up
 
 func NewCustomerController(store CRUDStore[models.Customer, models.NewCustomer, models.UpdateCustomer]) *CustomerController {
 	return NewCRUDController[models.Customer, models.NewCustomer, models.UpdateCustomer](store)
+}
+
+func NewGroupController(store CRUDStore[models.Group, models.NewGroup, models.UpdateGroup]) *GroupController {
+	return NewCRUDController[models.Group, models.NewGroup, models.UpdateGroup](store)
 }
 
 func NewSalesmanController(store CRUDStore[models.Salesman, models.NewSalesman, models.UpdateSalesman]) *SalesmanController {

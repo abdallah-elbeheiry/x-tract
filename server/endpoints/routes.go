@@ -16,8 +16,10 @@ type crudHandler interface {
 
 // Handlers collects the HTTP controllers registered by this package.
 type Handlers struct {
+	Auth           *controllers.AuthController
 	Admins         *controllers.AdminController
 	Customers      *controllers.CustomerController
+	Groups         *controllers.GroupController
 	Salesmen       *controllers.SalesmanController
 	GuestEmployees *controllers.GuestEmployeeController
 }
@@ -25,8 +27,10 @@ type Handlers struct {
 // Register attaches all HTTP endpoints to the provided Gin router.
 func Register(router gin.IRoutes, handlers Handlers) {
 	registerHealthRoute(router)
+	registerAuthRoutes(router, handlers.Auth)
 	registerAdminRoutes(router, handlers.Admins)
 	registerCustomerRoutes(router, handlers.Customers)
+	registerGroupRoutes(router, handlers.Groups)
 	registerSalesmanRoutes(router, handlers.Salesmen)
 	registerGuestEmployeeRoutes(router, handlers.GuestEmployees)
 }
@@ -44,11 +48,25 @@ func registerAdminRoutes(router gin.IRoutes, controller crudHandler) {
 	registerCRUDRoutes(router, "/admins", controller)
 }
 
+func registerAuthRoutes(router gin.IRoutes, controller *controllers.AuthController) {
+	if controller == nil {
+		return
+	}
+	router.POST("/auth/login", controller.Login)
+}
+
 func registerCustomerRoutes(router gin.IRoutes, controller crudHandler) {
 	if controller == nil {
 		return
 	}
 	registerCRUDRoutes(router, "/customers", controller)
+}
+
+func registerGroupRoutes(router gin.IRoutes, controller crudHandler) {
+	if controller == nil {
+		return
+	}
+	registerCRUDRoutes(router, "/groups", controller)
 }
 
 func registerSalesmanRoutes(router gin.IRoutes, controller crudHandler) {

@@ -8,4 +8,12 @@ type Group struct {
 	Name string    `json:"name"`
 }
 
-//logic added later
+// NewGroup is the request payload for creating a group.
+type NewGroup struct {
+	Name string `json:"name" binding:"required"`
+}
+
+// UpdateGroup is the request payload for updating a group.
+type UpdateGroup struct {
+	Name *string `json:"name"`
+}

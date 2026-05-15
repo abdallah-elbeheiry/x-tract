@@ -9,7 +9,7 @@ import (
 )
 
 const guestEmployeeSelectColumns = `
-	u.id, u.name, u.email, u.number, u.role, g.group_id::text
+	u.id, u.name, u.email, u.number, u.role, ge.group_id::text, grp.name
 `
 
 // GuestEmployeeStore exposes CRUD behavior for guest employee resources.
@@ -29,8 +29,9 @@ func (s *GuestEmployeeStore) List(ctx context.Context) ([]models.GuestEmployee, 
 
 	rows, err := s.db.conn.QueryContext(ctx, `
 		SELECT `+guestEmployeeSelectColumns+`
-		FROM guest_employee g
-		JOIN users u ON u.id = g.user_id
+		FROM guest_employee ge
+		JOIN users u ON u.id = ge.user_id
+		LEFT JOIN groups grp ON grp.id = ge.group_id
 		ORDER BY u.name, u.id
 	`)
 	if err != nil {
@@ -83,9 +84,10 @@ func (s *GuestEmployeeStore) GetByID(ctx context.Context, id uuid.UUID) (*models
 
 	row := s.db.conn.QueryRowContext(ctx, `
 		SELECT `+guestEmployeeSelectColumns+`
-		FROM guest_employee g
-		JOIN users u ON u.id = g.user_id
-		WHERE g.user_id = $1
+		FROM guest_employee ge
+		JOIN users u ON u.id = ge.user_id
+		LEFT JOIN groups grp ON grp.id = ge.group_id
+		WHERE ge.user_id = $1
 	`, id)
 
 	return scanGuestEmployee(row)

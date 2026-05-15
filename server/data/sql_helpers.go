@@ -144,6 +144,14 @@ func scanSalesman(row scanner) (*models.Salesman, error) {
 	}, nil
 }
 
+func scanGroup(row scanner) (*models.Group, error) {
+	var group models.Group
+	if err := row.Scan(&group.ID, &group.Name); err != nil {
+		return nil, normalizeDBError(err)
+	}
+	return &group, nil
+}
+
 func execUpdate(ctx context.Context, db execer, query string, args ...any) error {
 	result, err := db.ExecContext(ctx, query, args...)
 	if err != nil {
@@ -217,8 +225,9 @@ func scanGuestEmployee(row scanner) (*models.GuestEmployee, error) {
 	var user models.User
 	var number sql.NullString
 	var groupID sql.NullString
+	var groupName sql.NullString
 
-	if err := row.Scan(&user.ID, &user.Username, &user.Email, &number, &user.Role, &groupID); err != nil {
+	if err := row.Scan(&user.ID, &user.Username, &user.Email, &number, &user.Role, &groupID, &groupName); err != nil {
 		return nil, normalizeDBError(err)
 	}
 
@@ -230,7 +239,10 @@ func scanGuestEmployee(row scanner) (*models.GuestEmployee, error) {
 		if err != nil {
 			return nil, err
 		}
-		guest.GroupID = &parsed
+		guest.Group = &models.Group{
+			ID:   parsed,
+			Name: groupName.String,
+		}
 	}
 
 	return guest, nil

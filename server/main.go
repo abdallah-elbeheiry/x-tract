@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 	"os"
+	"time"
+	"x-tract/auth"
 	"x-tract/controllers"
 	"x-tract/data"
 	"x-tract/endpoints"
@@ -20,10 +22,13 @@ func main() {
 	}()
 
 	router := gin.Default()
+	jwtManager := newJWTManager()
 
 	endpoints.Register(router, endpoints.Handlers{
+		Auth:           controllers.NewAuthController(data.NewAuthStore(db), jwtManager),
 		Admins:         controllers.NewAdminController(data.NewAdminStore(db)),
 		Customers:      controllers.NewCustomerController(data.NewCustomerStore(db)),
+		Groups:         controllers.NewGroupController(data.NewGroupStore(db)),
 		Salesmen:       controllers.NewSalesmanController(data.NewSalesmanStore(db)),
 		GuestEmployees: controllers.NewGuestEmployeeController(data.NewGuestEmployeeStore(db)),
 	})
@@ -59,4 +64,17 @@ func serverAddress() string {
 		return addr
 	}
 	return ":8080"
+}
+
+func newJWTManager() *auth.Manager {
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		secret = "dev-insecure-secret-change-me"
+	}
+
+	return auth.NewManager(auth.Config{
+		Secret:     secret,
+		TTL:        24 * time.Hour,
+		IssuerName: "x-tract",
+	})
 }

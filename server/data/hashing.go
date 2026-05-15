@@ -28,8 +28,8 @@ func hashPassword(password string) (hash []byte, salt []byte, err error) {
 	return hash, salt, nil
 }
 
-// verifyPassword compares a plain text password against the stored hash and salt
-func verifyPassword(password string, storedHash, storedSalt []byte) bool {
+// VerifyPassword compares a plain text password against the stored hash and salt.
+func VerifyPassword(password string, storedHash, storedSalt []byte) bool {
 	computedHash := argon2.IDKey([]byte(password), storedSalt, iterations, memory, parallelism, keyLength)
 
 	return subtle.ConstantTimeCompare(storedHash, computedHash) == 1

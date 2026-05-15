@@ -11,4 +11,6 @@ var (
 	ErrInvalidRole = errors.New("invalid role")
 	// ErrForeignKeyViolation reports an invalid referenced row.
 	ErrForeignKeyViolation = errors.New("invalid reference")
+	// ErrInvalidCredentials reports a login failure.
+	ErrInvalidCredentials = errors.New("invalid credentials")
 )
